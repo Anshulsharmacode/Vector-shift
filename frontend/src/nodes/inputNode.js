@@ -1,47 +1,56 @@
-// inputNode.js
-
-import { useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { useState, useEffect } from "react";
+import { Position } from "reactflow";
+import { BaseNode } from "./baseNode";
 
 export const InputNode = ({ id, data }) => {
-  const [currName, setCurrName] = useState(data?.inputName || id.replace('customInput-', 'input_'));
-  const [inputType, setInputType] = useState(data.inputType || 'Text');
+  const [currName, setCurrName] = useState(
+    data?.inputName || id.replace("customInput-", "input_"),
+  );
+  const [inputType, setInputType] = useState(data.inputType || "Text");
+  const [inputValue, setInputValue] = useState(data?.value || "");
 
-  const handleNameChange = (e) => {
-    setCurrName(e.target.value);
-  };
-
-  const handleTypeChange = (e) => {
-    setInputType(e.target.value);
-  };
+  useEffect(() => {
+    data.value = inputValue;
+  }, [inputValue, data]);
 
   return (
-    <div style={{width: 200, height: 80, border: '1px solid black'}}>
-      <div>
-        <span>Input</span>
-      </div>
-      <div>
-        <label>
-          Name:
-          <input 
-            type="text" 
-            value={currName} 
-            onChange={handleNameChange} 
+    <BaseNode
+      id={id}
+      label="Input"
+      handles={[{ type: "source", position: Position.Right, id: "value" }]}
+    >
+      <div className="space-y-1.5">
+        <label className="flex items-center gap-2">
+          <span className="text-xs font-medium text-gray-500 w-10">Name</span>
+          <input
+            type="text"
+            value={currName}
+            onChange={(e) => setCurrName(e.target.value)}
+            className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-gray-400"
           />
         </label>
-        <label>
-          Type:
-          <select value={inputType} onChange={handleTypeChange}>
+        <label className="flex items-center gap-2">
+          <span className="text-xs font-medium text-gray-500 w-10">Type</span>
+          <select
+            value={inputType}
+            onChange={(e) => setInputType(e.target.value)}
+            className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-gray-400 bg-white"
+          >
             <option value="Text">Text</option>
             <option value="File">File</option>
           </select>
         </label>
+        <label className="flex items-center gap-2">
+          <span className="text-xs font-medium text-gray-500 w-10">Value</span>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Enter value..."
+            className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-gray-400"
+          />
+        </label>
       </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        id={`${id}-value`}
-      />
-    </div>
+    </BaseNode>
   );
-}
+};

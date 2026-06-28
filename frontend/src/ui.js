@@ -10,6 +10,7 @@ import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
+import { ParseJsonNode } from './nodes/parseJsonNode';
 
 import 'reactflow/dist/style.css';
 
@@ -20,6 +21,7 @@ const nodeTypes = {
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  parseJson: ParseJsonNode,
 };
 
 const selector = (state) => ({
@@ -80,7 +82,7 @@ export const PipelineUI = () => {
             addNode(newNode);
           }
         },
-        [reactFlowInstance]
+        [reactFlowInstance, addNode, getNodeID]
     );
 
     const onDragOver = useCallback((event) => {
@@ -90,7 +92,7 @@ export const PipelineUI = () => {
 
     return (
         <>
-        <div ref={reactFlowWrapper} style={{width: '100wv', height: '70vh'}}>
+        <div ref={reactFlowWrapper} style={{width: '100%', height: '70vh'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
